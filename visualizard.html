@@ -2,7 +2,8 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>butts</title>
+	<title>visualizard</title>
+	<link rel="stylesheet" type="text/css" href="reset.css" />
 	<style>
 		html, body {
 			height: 100%;
@@ -28,43 +29,40 @@
 		window.onload = function() {
 			var mode = "s";
 
-		document.addEventListener("webkitfullscreenchange", function(e) {
-			vid.blur();
+			document.addEventListener("webkitfullscreenchange", function(e) {
+				vid.blur();
+				document.body.focus();
+			});
 
-			console.log("other hi");
-			document.body.focus();
-			console.log(document.activeElement);
-		});
+			document.getElementById("foo").onblur = function() {
+				this.focus();
+			}
 
-		document.getElementById("foo").onblur = function() {
-			this.focus();
-		}
-
-		document.onkeydown = function(e) {
-			switch(e.keyCode) {
-				case 38:
-				console.log("up");
-				e.stopPropagation();
-				break;
-				case 40:
-				console.log("down");
-				e.stopPropagation();
-				break;
-				case 83:
-		  			//saturation
-		  			mode = "s";
-		  			console.log("mode is s");
-		  			break;
+			document.onkeydown = function(e) {
+				switch(e.keyCode) {
+					case 38:
+						console.log("up");
+						e.stopPropagation();
+						break;
+					case 40:
+						console.log("down");
+						e.stopPropagation();
+						break;
+					case 83:
+			  			//saturation
+			  			mode = "s";
+			  			console.log("mode is s");
+			  			break;
 		  			case 66:
-		  			mode = "b";
-		  			//brightness
-		  			console.log("mode is b");
-		  			break;
+			  			mode = "b";
+			  			//brightness
+			  			console.log("mode is b");
+			  			break;
 		  			case 73:
-		  			mode = "i";
-		  			//invert
-		  			console.log("mode is i");
-		  			break;
+			  			mode = "i";
+			  			//invert
+			  			console.log("mode is i");
+		  				break;
 		  		}
 		  	}
 		};
