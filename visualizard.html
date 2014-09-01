@@ -17,7 +17,7 @@
 </head>
 <body id="foo">
 <!-- 	<iframe id="vid" width="420" height="315" src="https://www.youtube.com/embed/IlbsLoXb2ho?disablekb=1" frameborder="0" allowfullscreen="" style="z-index: -99; filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -webkit-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -moz-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -o-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1); -ms-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1);"></iframe> -->
-	<div style="filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -webkit-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -moz-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -o-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1); -ms-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); text-align:center; height:100%">	
+	<div id="container" style="filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -webkit-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -moz-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -o-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1); -ms-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); text-align:center; height:100%">	
 		<object width="420" height="315">
 			<param name="movie" value="https://www.youtube.com/v/IlbsLoXb2ho?version=3&amp;hl=en_US&disablekb=1&autohide=1&controls=0&showinfo=0"></param><param name="allowFullScreen" value="true"></param>
 			<param name="allowscriptaccess" value="always"></param>
@@ -25,9 +25,16 @@
 		</object>
 	</div>
 	<script>
-		var vid = document.getElementById("vid");
+
+		var container = document.getElementById("container");
+
+		function apply(saturate, brightness, invert) {
+			container.setAttribute("style", "-webkit-filter: saturate(" + saturate + ") brightness(" + brightness + ") invert(" + invert + ");");
+		}
+
 		window.onload = function() {
-			var mode = "s";
+			var vid = document.getElementById("vid");
+			var mode = "saturate";
 
 			document.addEventListener("webkitfullscreenchange", function(e) {
 				vid.blur();
@@ -39,28 +46,51 @@
 			}
 
 			document.onkeydown = function(e) {
+
+				var current = container.getAttribute("style");
+				var saturate = current.split("saturate(");
+				saturate = saturate[1].split(")");
+				var brightness = current.split("brightness(");
+				brightness = brightness[1].split(")");
+				var invert = current.split("invert(");
+				invert = invert[1].split(")");
+
 				switch(e.keyCode) {
 					case 38:
 						console.log("up");
-						e.stopPropagation();
+						if(mode == "saturate") {
+							newSaturate = saturate[0].toString();
+							newSaturate++;
+							saturate[0] = newSaturate;
+						}
+						if(mode == "brightness") {
+							newBrightness = brightness[0].toString();
+							newBrightness++;
+							brightness[0] = newBrightness;
+						}
+						if(mode == "invert") {
+							//i needs to be binary
+							newInvert = invert[0].toString();
+							newInvert++;
+							invert[0] = newInvert;
+						}
+						console.log(saturate[0], brightness[0], invert[0]);
+						apply(saturate[0], brightness[0], invert[0]);
+
 						break;
 					case 40:
 						console.log("down");
-						e.stopPropagation();
 						break;
 					case 83:
-			  			//saturation
-			  			mode = "s";
+			  			mode = "saturate";
 			  			console.log("mode is s");
 			  			break;
 		  			case 66:
-			  			mode = "b";
-			  			//brightness
+			  			mode = "brightness";
 			  			console.log("mode is b");
 			  			break;
 		  			case 73:
-			  			mode = "i";
-			  			//invert
+			  			mode = "invert";
 			  			console.log("mode is i");
 		  				break;
 		  		}
