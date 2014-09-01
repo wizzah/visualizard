@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>butts</title>
+	<style>
+		html, body {
+			height: 100%;
+			background: black;
+			overflow: hidden;
+		}
+		div {
+			height: 100%;
+		}
+	</style>
+</head>
+<body id="foo">
+<!-- 	<iframe id="vid" width="420" height="315" src="https://www.youtube.com/embed/IlbsLoXb2ho?disablekb=1" frameborder="0" allowfullscreen="" style="z-index: -99; filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -webkit-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -moz-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -o-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1); -ms-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1);"></iframe> -->
+	<div style="filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -webkit-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -moz-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -o-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1); -ms-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); text-align:center; height:100%">	
+		<object width="420" height="315">
+			<param name="movie" value="https://www.youtube.com/v/IlbsLoXb2ho?version=3&amp;hl=en_US&disablekb=1&autohide=1&controls=0&showinfo=0"></param><param name="allowFullScreen" value="true"></param>
+			<param name="allowscriptaccess" value="always"></param>
+			<embed id="vid" src="https://www.youtube.com/v/IlbsLoXb2ho?version=3&amp;hl=en_US&disablekb=1&autohide=1&controls=0&showinfo=0" type="application/x-shockwave-flash" width="100%" height="100%" allowscriptaccess="always" allowfullscreen="true"></embed>
+		</object>
+	</div>
+	<script>
+		var vid = document.getElementById("vid");
+		window.onload = function() {
+			var mode = "s";
+
+		document.addEventListener("webkitfullscreenchange", function(e) {
+			vid.blur();
+
+			console.log("other hi");
+			document.body.focus();
+			console.log(document.activeElement);
+		});
+
+		document.getElementById("foo").onblur = function() {
+			this.focus();
+		}
+
+		document.onkeydown = function(e) {
+			switch(e.keyCode) {
+				case 38:
+				console.log("up");
+				e.stopPropagation();
+				break;
+				case 40:
+				console.log("down");
+				e.stopPropagation();
+				break;
+				case 83:
+		  			//saturation
+		  			mode = "s";
+		  			console.log("mode is s");
+		  			break;
+		  			case 66:
+		  			mode = "b";
+		  			//brightness
+		  			console.log("mode is b");
+		  			break;
+		  			case 73:
+		  			mode = "i";
+		  			//invert
+		  			console.log("mode is i");
+		  			break;
+		  		}
+		  	}
+		};
+	</script>
+</body>
+</html>
