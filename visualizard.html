@@ -15,83 +15,123 @@
 		}
 	</style>
 </head>
-<body id="foo">
+<body id="container" style="filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(8) brightness(1) contrast(1); -webkit-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(1) brightness(1) contrast(1); -moz-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -o-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1); -ms-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); text-align:center; height:100%">
 <!-- 	<iframe id="vid" width="420" height="315" src="https://www.youtube.com/embed/IlbsLoXb2ho?disablekb=1" frameborder="0" allowfullscreen="" style="z-index: -99; filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -webkit-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -moz-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -o-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1); -ms-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1);"></iframe> -->
-	<div id="container" style="filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -webkit-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -moz-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); -o-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1); -ms-filter: hue-rotate(0deg) invert(0) blur(0.1px) saturate(87) brightness(1) contrast(1); text-align:center; height:100%">	
 		<object width="420" height="315">
 			<param name="movie" value="https://www.youtube.com/v/IlbsLoXb2ho?version=3&amp;hl=en_US&disablekb=1&autohide=1&controls=0&showinfo=0"></param><param name="allowFullScreen" value="true"></param>
 			<param name="allowscriptaccess" value="always"></param>
 			<embed id="vid" src="https://www.youtube.com/v/IlbsLoXb2ho?version=3&amp;hl=en_US&disablekb=1&autohide=1&controls=0&showinfo=0" type="application/x-shockwave-flash" width="100%" height="100%" allowscriptaccess="always" allowfullscreen="true"></embed>
 		</object>
-	</div>
 	<script>
-
-		var container = document.getElementById("container");
 
 		function apply(saturate, brightness, invert) {
 			container.setAttribute("style", "-webkit-filter: saturate(" + saturate + ") brightness(" + brightness + ") invert(" + invert + ");");
 		}
 
 		window.onload = function() {
+
 			var vid = document.getElementById("vid");
 			var mode = "saturate";
+			var container = document.getElementById("container");
+			var current = container.getAttribute("style");
+
+			var saturate = current.split("saturate(");
+			saturate = parseInt(saturate[1].split(")"));
+			var brightness = current.split("brightness(");
+			brightness = parseInt(brightness[1].split(")"));
+			var invert = current.split("invert(");
+			invert = parseInt(invert[1].split(")"));
+
+			console.log(saturate, brightness, invert);
 
 			document.addEventListener("webkitfullscreenchange", function(e) {
 				vid.blur();
 				document.body.focus();
 			});
 
-			document.getElementById("foo").onblur = function() {
+			container.onblur = function() {
 				this.focus();
+			}
+
+			document.onkeyup = function(e) {
+				//normalize, letter n
+				if(e.keyCode == 78) {
+	  				if(mode = "saturate") {
+	  					saturate = 1;
+	  				}
+	  				if(mode = "brightness") {
+	  					brightness = 1;
+	  				}
+	  				if(mode = "invert") {
+	  					mode = 0;
+	  				}
+				}
+				apply(saturate,brightness, invert);
 			}
 
 			document.onkeydown = function(e) {
 
-				var current = container.getAttribute("style");
-				var saturate = current.split("saturate(");
-				saturate = saturate[1].split(")");
-				var brightness = current.split("brightness(");
-				brightness = brightness[1].split(")");
-				var invert = current.split("invert(");
-				invert = invert[1].split(")");
+				console.log(saturate, brightness, invert);
 
 				switch(e.keyCode) {
+
 					case 38:
-						console.log("up");
+						//increase
 						if(mode == "saturate") {
-							newSaturate = saturate[0].toString();
-							newSaturate++;
-							saturate[0] = newSaturate;
+							saturate += 14;
 						}
 						if(mode == "brightness") {
-							newBrightness = brightness[0].toString();
-							newBrightness++;
-							brightness[0] = newBrightness;
+							brightness += 1;
 						}
 						if(mode == "invert") {
 							//i needs to be binary
-							newInvert = invert[0].toString();
-							newInvert++;
-							invert[0] = newInvert;
+							if(invert == 0) {
+								invert = 1;
+							} else {
+								invert = 0;
+							}
 						}
-						console.log(saturate[0], brightness[0], invert[0]);
-						apply(saturate[0], brightness[0], invert[0]);
-
+						apply(saturate, brightness, invert);
 						break;
+
 					case 40:
-						console.log("down");
+						//decrease
+						if(mode == "saturate") {
+
+							//bottom boundary is 0
+							if ((saturate - 14) >= 0) {
+								saturate -= 14;
+							} else {
+								saturate = 1;
+							}
+
+						}
+						if(mode == "brightness") {
+
+							//bottom boundary is 0
+							if ((brightness - 1) > 0) {
+								brightness -= 1;
+							} else {
+								brightness = 1;
+							}
+						}
+						if(mode == "invert") {
+							if(invert == 0) {
+								invert = 1;
+							} else {
+								invert = 0;
+							}
+						}
+						apply(saturate, brightness, invert);
 						break;
 					case 83:
 			  			mode = "saturate";
-			  			console.log("mode is s");
 			  			break;
 		  			case 66:
 			  			mode = "brightness";
-			  			console.log("mode is b");
 			  			break;
 		  			case 73:
 			  			mode = "invert";
-			  			console.log("mode is i");
 		  				break;
 		  		}
 		  	}
