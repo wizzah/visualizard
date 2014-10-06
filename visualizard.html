@@ -56,14 +56,14 @@
 			document.onkeyup = function(e) {
 				//normalize, letter n
 				if(e.keyCode == 78) {
-	  				if(mode = "saturate") {
+	  				if(mode == "saturate") {
 	  					saturate = 1;
 	  				}
-	  				if(mode = "brightness") {
+	  				if(mode == "brightness") {
 	  					brightness = 1;
 	  				}
-	  				if(mode = "invert") {
-	  					mode = 0;
+	  				if(mode == "invert") {
+	  					invert = 0;
 	  				}
 				}
 				apply(saturate,brightness, invert);
